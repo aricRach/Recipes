@@ -104,6 +104,28 @@ npm start
 
 Then open http://localhost:4200, sign in with Google, and create your first recipe.
 
+## 9. Deploy to Netlify
+
+`environment.ts`/`environment.development.ts` are gitignored (they hold your real Firebase and
+Cloudinary values), so Netlify can't read them from the repo. Instead, `scripts/generate-env.js`
+runs automatically before every build (`npm run build` triggers it via the `prebuild` script) and
+writes those files from environment variables — set these in **Site configuration → Environment
+variables** in the Netlify dashboard:
+
+- `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_STORAGE_BUCKET`,
+  `FIREBASE_MESSAGING_SENDER_ID`, `FIREBASE_APP_ID` — from step 2.
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_UPLOAD_PRESET` — from step 5.
+
+Then:
+
+1. In Netlify, **Add new site → Import an existing project** and pick this GitHub repo.
+   `netlify.toml` already sets the build command (`npm run build`) and publish directory
+   (`dist/recipes/browser`), plus the SPA redirect Angular's router needs.
+2. Add the environment variables above, then trigger a deploy.
+3. In the Firebase console, go to **Authentication → Settings → Authorized domains** and add your
+   Netlify domain (e.g. `your-site.netlify.app`) — Google sign-in will fail on unrecognized
+   domains otherwise.
+
 ## Notes
 
 - The "check off ingredients while cooking" line-through state is session-only (kept in memory in

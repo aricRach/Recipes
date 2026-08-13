@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist/recipes/browser"
+
+# Angular is a client-side router — send every path to index.html so deep links
+# (e.g. /recipes/abc123) work on refresh instead of 404ing.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
