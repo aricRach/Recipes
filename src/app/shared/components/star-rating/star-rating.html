@@ -1,0 +1,10 @@
+<span class="star-rating" [class.readonly]="readonly()" (mouseleave)="onLeave()">
+  @for (star of stars(); track star) {
+    <mat-icon
+      class="star"
+      [class.filled]="isFilled(star)"
+      (click)="onClick(star)"
+      (mouseenter)="onHover(star)"
+    >{{ isFilled(star) ? 'star' : 'star_border' }}</mat-icon>
+  }
+</span>

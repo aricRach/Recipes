@@ -1,0 +1,78 @@
+@if (recipe(); as recipe) {
+  <div class="recipe-detail">
+    <div class="recipe-detail__header">
+      <h1>{{ recipe.title }}</h1>
+      <div class="recipe-detail__owner-actions">
+        <button
+          mat-icon-button
+          class="recipe-detail__favorite"
+          [class.recipe-detail__favorite--active]="isFavorite()"
+          (click)="toggleFavorite()"
+          [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
+        >
+          <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+        @if (isOwner()) {
+          <button mat-icon-button (click)="editRecipe()" aria-label="Edit recipe">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteRecipe()" aria-label="Delete recipe">
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (recipe.imageUrl) {
+      <img [src]="recipe.imageUrl" [alt]="recipe.title" class="recipe-detail__image" />
+    }
+
+    <div class="recipe-detail__meta">
+      <app-star-rating [value]="recipe.avgRating" [readonly]="true" />
+      <span>({{ recipe.ratingCount }})</span>
+      <span class="recipe-detail__owner">by {{ recipe.ownerName }}</span>
+    </div>
+
+    @if (recipe.labelNames.length) {
+      <mat-chip-set class="recipe-detail__labels">
+        @for (label of recipe.labelNames; track label) {
+          <mat-chip disabled>{{ label }}</mat-chip>
+        }
+      </mat-chip-set>
+    }
+
+    @if (!isOwner()) {
+      <div class="recipe-detail__my-rating">
+        <span>Your rating:</span>
+        <app-star-rating [value]="myRating()?.value ?? 0" (valueChange)="rate($event)" />
+      </div>
+    }
+
+    <section class="recipe-detail__section">
+      <h2>Ingredients</h2>
+      <p class="recipe-detail__hint">Click an ingredient off as you add it.</p>
+      <app-ingredient-checklist [ingredients]="recipe.ingredients" />
+    </section>
+
+    <section class="recipe-detail__section">
+      <h2>Instructions</h2>
+      <p class="recipe-detail__instructions">{{ recipe.instructions }}</p>
+    </section>
+
+    <section class="recipe-detail__section">
+      <h2>Comments ({{ comments().length }})</h2>
+      @if (!isOwner()) {
+        <app-comment-form (submitComment)="addComment($event)" />
+      }
+      @for (comment of comments(); track comment.id) {
+        <app-comment-item
+          [comment]="comment"
+          [currentUserId]="auth.currentUser()?.uid ?? null"
+          (deleteComment)="deleteComment($event)"
+        />
+      }
+    </section>
+  </div>
+} @else {
+  <p class="recipe-detail__loading">Loading recipe...</p>
+}

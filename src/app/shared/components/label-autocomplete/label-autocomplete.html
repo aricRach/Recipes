@@ -1,0 +1,31 @@
+<mat-form-field class="label-autocomplete" appearance="outline">
+  <mat-label>Labels</mat-label>
+  <mat-chip-grid #chipGrid aria-label="Selected labels">
+    @for (label of selected(); track label.id) {
+      <mat-chip-row (removed)="remove(label)">
+        {{ label.name }}
+        <button matChipRemove aria-label="Remove label">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    }
+    <input
+      #labelInput
+      placeholder="Add a label..."
+      [matChipInputFor]="chipGrid"
+      [matAutocomplete]="auto"
+      [ngModel]="inputText()"
+      (ngModelChange)="inputText.set($event)"
+    />
+  </mat-chip-grid>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+    @for (option of filteredOptions(); track option.id) {
+      <mat-option [value]="option">{{ option.name }}</mat-option>
+    }
+    @if (showCreateOption()) {
+      <mat-option [value]="{ create: true, term: inputText().trim() }"
+        >Add "{{ inputText() }}"</mat-option
+      >
+    }
+  </mat-autocomplete>
+</mat-form-field>

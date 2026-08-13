@@ -1,0 +1,20 @@
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+
+  .star {
+    color: #cfd2d6;
+
+    &.filled {
+      color: #f5a623;
+    }
+  }
+
+  &:not(.readonly) .star {
+    cursor: pointer;
+  }
+
+  &.readonly .star {
+    cursor: default;
+  }
+}

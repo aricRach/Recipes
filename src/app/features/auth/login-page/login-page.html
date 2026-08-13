@@ -1,0 +1,13 @@
+<div class="login-page">
+  <mat-card class="login-page__card">
+    <mat-card-content>
+      <mat-icon class="login-page__icon">restaurant_menu</mat-icon>
+      <h1>Recipes</h1>
+      <p>Save, share, and rate recipes with the people you cook with.</p>
+      <button mat-flat-button color="primary" (click)="signIn()" [disabled]="signingIn()">
+        <mat-icon>login</mat-icon>
+        Sign in with Google
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,49 @@
+<div class="recipes-list-page">
+  @if (ownerOnly) {
+    <h1 class="recipes-list-page__title">My recipes</h1>
+  } @else if (favoritesOnly) {
+    <h1 class="recipes-list-page__title">My favorites</h1>
+  }
+
+  <div class="recipes-list-page__toolbar">
+    <app-search-bar (valueChange)="onSearch($event)" />
+    <button mat-flat-button color="primary" (click)="createRecipe()">
+      <mat-icon>add</mat-icon>
+      New recipe
+    </button>
+  </div>
+
+  @if (labels().length) {
+    <mat-chip-set class="recipes-list-page__labels" aria-label="Filter by label">
+      @for (label of labels(); track label.id) {
+        <mat-chip
+          [class.recipes-list-page__label--selected]="selectedLabelIds().has(label.id)"
+          (click)="toggleLabel(label.id)"
+        >{{ label.name }}</mat-chip>
+      }
+    </mat-chip-set>
+  }
+
+  @if (filteredRecipes().length) {
+    <div class="recipes-list-page__grid">
+      @for (recipe of filteredRecipes(); track recipe.id) {
+        <app-recipe-card
+          [recipe]="recipe"
+          [isFavorite]="favoriteIds().has(recipe.id)"
+          (open)="openRecipe($event)"
+          (toggleFavorite)="toggleFavorite($event)"
+        />
+      }
+    </div>
+  } @else {
+    <p class="recipes-list-page__empty">
+      @if (ownerOnly) {
+        You haven't uploaded any recipes yet.
+      } @else if (favoritesOnly) {
+        You haven't favorited any recipes yet.
+      } @else {
+        No recipes found.
+      }
+    </p>
+  }
+</div>

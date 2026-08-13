@@ -1,0 +1,68 @@
+<mat-toolbar color="primary" class="shell-toolbar">
+  <a routerLink="/" class="shell-toolbar__brand">
+    <mat-icon>restaurant_menu</mat-icon>
+    <span>Recipes</span>
+  </a>
+  <span class="shell-toolbar__spacer"></span>
+
+  @if (auth.currentUser(); as user) {
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Account menu">
+      @if (user.photoURL) {
+        <img [src]="user.photoURL" [alt]="user.displayName ?? 'User'" class="shell-toolbar__avatar" />
+      } @else {
+        <mat-icon>account_circle</mat-icon>
+      }
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <div class="shell-toolbar__menu-name">{{ user.displayName }}</div>
+      <button mat-menu-item routerLink="/recipes/new">
+        <mat-icon>add</mat-icon>
+        <span>New recipe</span>
+      </button>
+      <button mat-menu-item routerLink="/recipes/mine">
+        <mat-icon>person</mat-icon>
+        <span>My recipes</span>
+      </button>
+      <button mat-menu-item routerLink="/recipes/favorites">
+        <mat-icon>favorite</mat-icon>
+        <span>My favorites</span>
+      </button>
+      <button mat-menu-item (click)="signOut()">
+        <mat-icon>logout</mat-icon>
+        <span>Sign out</span>
+      </button>
+    </mat-menu>
+  } @else if (auth.currentUser() === null) {
+    <a mat-button routerLink="/login">Sign in</a>
+  }
+</mat-toolbar>
+
+@if (auth.currentUser()) {
+  <nav class="shell-nav">
+    <a
+      class="shell-nav__link"
+      routerLink="/"
+      routerLinkActive="shell-nav__link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <mat-icon>home</mat-icon>
+      <span>Home</span>
+    </a>
+    <a class="shell-nav__link" routerLink="/recipes/mine" routerLinkActive="shell-nav__link--active">
+      <mat-icon>person</mat-icon>
+      <span>My recipes</span>
+    </a>
+    <a
+      class="shell-nav__link"
+      routerLink="/recipes/favorites"
+      routerLinkActive="shell-nav__link--active"
+    >
+      <mat-icon>favorite</mat-icon>
+      <span>My favorites</span>
+    </a>
+  </nav>
+}
+
+<main class="shell-content">
+  <router-outlet />
+</main>

@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == userId;
+
+      // Each user's own favorited-recipe list; only they can see or change it.
+      match /favorites/{recipeId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+    }
+
+    // Labels are append-only from the client, with one exception: a label can be deleted
+    // once no recipe references it anymore. Rules can't express "no recipe still has this
+    // labelId" (that requires a cross-collection query), so deletion is gated client-side —
+    // LabelService.deleteIfUnused only calls this after confirming via query that zero
+    // recipes reference the label. Renaming is never allowed.
+    match /labels/{labelId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if isSignedIn();
+    }
+
+    match /recipes/{recipeId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        resource.data.ownerId == request.auth.uid ||
+        // Non-owners may only touch the denormalized counters, which RatingService/
+        // CommentService update transactionally alongside their own subcollection docs.
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['avgRating', 'ratingCount', 'commentCount'])
+      );
+      allow delete: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+
+      match /ratings/{uid} {
+        allow read: if isSignedIn();
+        allow create, update: if isSignedIn() && request.auth.uid == uid;
+        // Also deletable by the recipe owner, who must clean up ratings when
+        // deleting the recipe itself (RecipeService.delete).
+        allow delete: if isSignedIn() && (
+          request.auth.uid == uid ||
+          get(/databases/$(database)/documents/recipes/$(recipeId)).data.ownerId == request.auth.uid
+        );
+      }
+
+      match /comments/{commentId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+        allow update: if false;
+        // Deletable by the comment's author, or by the recipe owner cleaning up
+        // comments when deleting the recipe itself (RecipeService.delete).
+        allow delete: if isSignedIn() && (
+          resource.data.userId == request.auth.uid ||
+          get(/databases/$(database)/documents/recipes/$(recipeId)).data.ownerId == request.auth.uid
+        );
+      }
+    }
+  }
+}

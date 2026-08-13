@@ -1,0 +1,14 @@
+<ul class="ingredient-checklist">
+  @for (ingredient of ingredients(); track $index) {
+    <li
+      class="ingredient-checklist__item"
+      [class.checked]="isChecked($index)"
+      (click)="toggle($index)"
+    >
+      @if (ingredient.quantity) {
+        <span class="ingredient-checklist__quantity">{{ ingredient.quantity }}</span>
+      }
+      <span class="ingredient-checklist__name">{{ ingredient.name }}</span>
+    </li>
+  }
+</ul>

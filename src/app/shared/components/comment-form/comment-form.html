@@ -1,0 +1,13 @@
+<form class="comment-form" (ngSubmit)="submit()">
+  <mat-form-field appearance="outline" class="comment-form__field" subscriptSizing="dynamic">
+    <mat-label>Add a comment</mat-label>
+    <textarea
+      matInput
+      rows="2"
+      name="commentText"
+      [ngModel]="text()"
+      (ngModelChange)="text.set($event)"
+    ></textarea>
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit" [disabled]="!text().trim()">Post</button>
+</form>

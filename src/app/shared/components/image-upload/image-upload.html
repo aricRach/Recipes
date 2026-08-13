@@ -1,0 +1,25 @@
+<div class="image-upload">
+  @if (previewUrl()) {
+    <div class="image-upload__preview">
+      <img [src]="previewUrl()" alt="Recipe image preview" />
+      <button mat-icon-button type="button" (click)="clear()" aria-label="Remove image">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  } @else {
+    <div class="image-upload__placeholder">
+      <mat-icon>image</mat-icon>
+      <span>No image selected</span>
+    </div>
+  }
+
+  <input #fileInput type="file" accept="image/*" hidden (change)="onFileChange($event)" />
+  <button mat-stroked-button type="button" (click)="fileInput.click()">
+    <mat-icon>upload</mat-icon>
+    {{ previewUrl() ? 'Change image' : 'Upload image' }}
+  </button>
+
+  @if (error()) {
+    <span class="image-upload__error">{{ error() }}</span>
+  }
+</div>

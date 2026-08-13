@@ -1,0 +1,4 @@
+<mat-form-field class="search-bar" appearance="outline" subscriptSizing="dynamic">
+  <mat-icon matPrefix>search</mat-icon>
+  <input matInput [placeholder]="placeholder()" [ngModel]="text()" (ngModelChange)="onInput($event)" />
+</mat-form-field>

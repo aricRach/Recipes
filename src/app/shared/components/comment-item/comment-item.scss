@@ -1,0 +1,25 @@
+.comment-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__author {
+    font-weight: 600;
+  }
+
+  &__time {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 0.8rem;
+    flex: 1;
+  }
+
+  &__text {
+    margin: 4px 0 0;
+    white-space: pre-wrap;
+  }
+}

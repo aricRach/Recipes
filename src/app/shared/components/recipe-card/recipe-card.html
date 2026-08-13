@@ -1,0 +1,38 @@
+<mat-card class="recipe-card" (click)="open.emit(recipe().id)">
+  <div class="recipe-card__image-wrap">
+    @if (recipe().imageUrl) {
+      <img mat-card-image [src]="recipe().imageUrl" [alt]="recipe().title" class="recipe-card__image" />
+    } @else {
+      <div class="recipe-card__image recipe-card__image--placeholder">
+        <span>No image</span>
+      </div>
+    }
+    <button
+      mat-icon-button
+      class="recipe-card__favorite"
+      (click)="onToggleFavorite($event)"
+      [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'"
+    >
+      <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+  </div>
+
+  <mat-card-content>
+    <h3 class="recipe-card__title">{{ recipe().title }}</h3>
+
+    <div class="recipe-card__rating">
+      <app-star-rating [value]="recipe().avgRating" [readonly]="true" />
+      <span class="recipe-card__rating-count">({{ recipe().ratingCount }})</span>
+    </div>
+
+    @if (recipe().labelNames.length) {
+      <mat-chip-set class="recipe-card__labels">
+        @for (label of recipe().labelNames; track label) {
+          <mat-chip disabled>{{ label }}</mat-chip>
+        }
+      </mat-chip-set>
+    }
+
+    <p class="recipe-card__owner">by {{ recipe().ownerName }}</p>
+  </mat-card-content>
+</mat-card>

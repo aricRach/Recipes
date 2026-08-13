@@ -1,0 +1,28 @@
+.ingredient-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &__item {
+    display: flex;
+    gap: 8px;
+    padding: 8px 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    &.checked {
+      color: rgba(0, 0, 0, 0.4);
+      text-decoration: line-through;
+    }
+  }
+
+  &__quantity {
+    font-weight: 600;
+    min-width: 64px;
+  }
+}

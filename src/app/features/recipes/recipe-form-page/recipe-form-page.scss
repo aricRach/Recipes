@@ -1,0 +1,36 @@
+.recipe-form {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__field {
+    width: 100%;
+  }
+
+  &__ingredients {
+    margin: 8px 0;
+  }
+
+  &__ingredient-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  &__quantity {
+    width: 100px;
+  }
+
+  &__ingredient-name {
+    flex: 1;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+  }
+}
