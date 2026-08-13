@@ -46,3 +46,9 @@ Thumbs.db
 # .template.ts files and fill in your own values; see SETUP.md.
 /src/environments/environment.ts
 /src/environments/environment.development.ts
+
+# Kept out of GitHub at the user's request. Note: these were already committed once
+# (0a3ad9e) and remain visible in that commit's history until the repo is made private
+# or history is rewritten — untracking alone only stops *future* commits from including them.
+/firestore.rules
+/SETUP.md
