@@ -15,5 +15,5 @@ export const environment = {
     uploadPreset: '',
   },
   // Emails of accounts allowed to edit/delete any recipe, not just their own — see SETUP.md.
-  adminEmails: [],
+  adminEmails: [] as string[],
 };

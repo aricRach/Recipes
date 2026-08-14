@@ -58,7 +58,7 @@ export const environment = {
       .split(',')
       .map((e) => e.trim())
       .filter(Boolean),
-  )},
+  )} as string[],
 };
 `;
 
