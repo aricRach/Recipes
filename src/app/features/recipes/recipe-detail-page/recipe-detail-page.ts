@@ -80,6 +80,9 @@ export class RecipeDetailPageComponent {
     return !!uid && uid === this.recipe()?.ownerId;
   });
 
+  /** Owners and the configured admin account can edit/delete a recipe. */
+  readonly canManage = computed(() => this.isOwner() || this.auth.isAdmin());
+
   private readonly uid = computed(() => this.auth.currentUser()?.uid);
 
   private readonly favoriteParams = computed(() => ({

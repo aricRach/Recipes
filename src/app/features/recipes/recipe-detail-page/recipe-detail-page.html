@@ -12,7 +12,7 @@
         >
           <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
         </button>
-        @if (isOwner()) {
+        @if (canManage()) {
           <button mat-icon-button (click)="editRecipe()" aria-label="Edit recipe">
             <mat-icon>edit</mat-icon>
           </button>

@@ -52,6 +52,13 @@ export const environment = {
     cloudName: '${process.env.CLOUDINARY_CLOUD_NAME}',
     uploadPreset: '${process.env.CLOUDINARY_UPLOAD_PRESET}',
   },
+  // Optional — comma-separated emails allowed to edit/delete any recipe. Unset means no admins.
+  adminEmails: ${JSON.stringify(
+    (process.env.ADMIN_EMAILS ?? '')
+      .split(',')
+      .map((e) => e.trim())
+      .filter(Boolean),
+  )},
 };
 `;
 

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   Auth,
@@ -10,6 +10,7 @@ import {
 } from '@angular/fire/auth';
 import { Firestore, doc, serverTimestamp, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -18,6 +19,12 @@ export class AuthService {
   private readonly router = inject(Router);
 
   readonly currentUser = toSignal(authState(this.auth), { initialValue: undefined });
+
+  /** True for accounts listed in `environment.adminEmails`, who can edit/delete any recipe. */
+  readonly isAdmin = computed(() => {
+    const email = this.currentUser()?.email?.toLowerCase();
+    return !!email && environment.adminEmails.some((e) => e.toLowerCase() === email);
+  });
 
   async signInWithGoogle(): Promise<void> {
     const credential = await signInWithPopup(this.auth, new GoogleAuthProvider());
