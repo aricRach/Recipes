@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -12,10 +14,20 @@ import { RecipeService } from '../../../core/data/recipe.service';
 import { RecipeCardComponent } from '../../../shared/components/recipe-card/recipe-card';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar';
 
+const LABEL_INLINE_LIMIT = 6;
+
 @Component({
   selector: 'app-recipes-list-page',
   standalone: true,
-  imports: [MatButtonModule, MatChipsModule, MatIconModule, RecipeCardComponent, SearchBarComponent],
+  imports: [
+    MatButtonModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatSelectModule,
+    RecipeCardComponent,
+    SearchBarComponent,
+  ],
   templateUrl: './recipes-list-page.html',
   styleUrl: './recipes-list-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +46,18 @@ export class RecipesListPageComponent {
   readonly selectedLabelIds = signal<Set<string>>(new Set());
 
   readonly labels = toSignal(this.labelService.list(), { initialValue: [] });
+
+  readonly hasManyLabels = computed(() => this.labels().length > LABEL_INLINE_LIMIT);
+
+  readonly selectedLabels = computed(() =>
+    this.labels().filter((label) => this.selectedLabelIds().has(label.id)),
+  );
+
+  readonly visibleLabels = computed(() =>
+    this.hasManyLabels() ? this.selectedLabels() : this.labels(),
+  );
+
+  readonly selectedLabelIdsArray = computed(() => Array.from(this.selectedLabelIds()));
 
   private readonly recipes = toSignal(this.recipeService.list(), { initialValue: [] });
 
@@ -92,6 +116,10 @@ export class RecipesListPageComponent {
       next.add(labelId);
     }
     this.selectedLabelIds.set(next);
+  }
+
+  onLabelSelectionChange(event: MatSelectChange): void {
+    this.selectedLabelIds.set(new Set(event.value as string[]));
   }
 
   openRecipe(id: string): void {
