@@ -15,10 +15,15 @@ import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 export class CommentItemComponent {
   readonly comment = input.required<Comment>();
   readonly currentUserId = input<string | null>(null);
+  readonly recipeOwnerId = input<string | null>(null);
 
   readonly deleteComment = output<string>();
 
   get canDelete(): boolean {
     return this.comment().userId === this.currentUserId();
+  }
+
+  get isRecipeOwner(): boolean {
+    return this.comment().userId === this.recipeOwnerId();
   }
 }

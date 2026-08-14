@@ -12,6 +12,17 @@
     font-weight: 600;
   }
 
+  &__owner-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 1px 6px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.6);
+  }
+
   &__time {
     color: rgba(0, 0, 0, 0.5);
     font-size: 0.8rem;

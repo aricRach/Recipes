@@ -1,6 +1,9 @@
 <div class="comment-item">
   <div class="comment-item__header">
     <span class="comment-item__author">{{ comment().userName }}</span>
+    @if (isRecipeOwner) {
+      <span class="comment-item__owner-badge">Owner</span>
+    }
     <span class="comment-item__time">{{ comment().createdAt | timeAgo }}</span>
     @if (canDelete) {
       <button mat-icon-button (click)="deleteComment.emit(comment().id)" aria-label="Delete comment">

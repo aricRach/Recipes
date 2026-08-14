@@ -71,13 +71,12 @@
 
     <section class="recipe-detail__section">
       <h2 class="recipe-detail__comments-title">Comments ({{ comments().length }})</h2>
-      @if (!isOwner()) {
-        <app-comment-form (submitComment)="addComment($event)" />
-      }
+      <app-comment-form (submitComment)="addComment($event)" />
       @for (comment of comments(); track comment.id) {
         <app-comment-item
           [comment]="comment"
           [currentUserId]="auth.currentUser()?.uid ?? null"
+          [recipeOwnerId]="recipe.ownerId"
           (deleteComment)="deleteComment($event)"
         />
       }
