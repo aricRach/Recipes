@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
@@ -16,15 +16,26 @@ import { AuthService } from '../../../core/auth/auth.service';
 export class LoginPageComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly signingIn = signal(false);
 
   constructor() {
     effect(() => {
       if (this.auth.currentUser()) {
-        void this.router.navigateByUrl('/');
+        void this.router.navigateByUrl(this.redirectUrl());
       }
     });
+  }
+
+  /**
+   * Reads the deep-link target from the `redirectUrl` query param (set by `authGuard`) instead
+   * of session/local storage, so the destination survives Firebase's full-page signInWithRedirect
+   * round trip. Only same-app relative paths are honored to prevent open-redirect abuse.
+   */
+  private redirectUrl(): string {
+    const target = this.route.snapshot.queryParamMap.get('redirectUrl');
+    return target && /^\/(?!\/|\\)/.test(target) ? target : '/';
   }
 
   async signIn(): Promise<void> {
