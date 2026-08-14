@@ -3,7 +3,7 @@
 
   <mat-form-field appearance="outline" class="recipe-form__field">
     <mat-label>Title</mat-label>
-    <input matInput formControlName="title" required />
+    <input matInput formControlName="title" required dir="auto" />
   </mat-form-field>
 
   <app-label-autocomplete
@@ -25,11 +25,11 @@
       <div class="recipe-form__ingredient-row" [formGroupName]="$index">
         <mat-form-field appearance="outline" class="recipe-form__quantity">
           <mat-label>Qty</mat-label>
-          <input matInput formControlName="quantity" />
+          <input matInput formControlName="quantity" dir="auto" />
         </mat-form-field>
         <mat-form-field appearance="outline" class="recipe-form__ingredient-name">
           <mat-label>Ingredient</mat-label>
-          <input matInput formControlName="name" required />
+          <input matInput formControlName="name" required dir="auto" />
         </mat-form-field>
         <button
           mat-icon-button
@@ -50,7 +50,7 @@
 
   <mat-form-field appearance="outline" class="recipe-form__field">
     <mat-label>Instructions</mat-label>
-    <textarea matInput formControlName="instructions" rows="8" required></textarea>
+    <textarea matInput formControlName="instructions" rows="8" required dir="auto"></textarea>
   </mat-form-field>
 
   <div class="recipe-form__actions">

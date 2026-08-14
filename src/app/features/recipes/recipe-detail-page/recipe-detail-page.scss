@@ -4,13 +4,25 @@
 
   &__header {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
     gap: 16px;
 
     h1 {
       margin: 0;
+      text-align: center;
     }
+  }
+
+  &__owner-actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__ingredients-title,
+  &__instructions-title,
+  &__comments-title {
+    text-align: center;
   }
 
   &__favorite--active {

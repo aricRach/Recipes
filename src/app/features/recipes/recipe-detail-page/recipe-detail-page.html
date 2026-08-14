@@ -1,7 +1,7 @@
 @if (recipe(); as recipe) {
   <div class="recipe-detail">
     <div class="recipe-detail__header">
-      <h1>{{ recipe.title }}</h1>
+      <h1 dir="auto">{{ recipe.title }}</h1>
       <div class="recipe-detail__owner-actions">
         <a
           mat-icon-button
@@ -59,18 +59,18 @@
     }
 
     <section class="recipe-detail__section">
-      <h2>Ingredients</h2>
+      <h2 class="recipe-detail__ingredients-title">Ingredients</h2>
       <p class="recipe-detail__hint">Click an ingredient off as you add it.</p>
       <app-ingredient-checklist [ingredients]="recipe.ingredients" />
     </section>
 
     <section class="recipe-detail__section">
-      <h2>Instructions</h2>
-      <p class="recipe-detail__instructions">{{ recipe.instructions }}</p>
+      <h2 class="recipe-detail__instructions-title">Instructions</h2>
+      <p class="recipe-detail__instructions" dir="auto">{{ recipe.instructions }}</p>
     </section>
 
     <section class="recipe-detail__section">
-      <h2>Comments ({{ comments().length }})</h2>
+      <h2 class="recipe-detail__comments-title">Comments ({{ comments().length }})</h2>
       @if (!isOwner()) {
         <app-comment-form (submitComment)="addComment($event)" />
       }

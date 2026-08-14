@@ -18,7 +18,7 @@
   </div>
 
   <mat-card-content>
-    <h3 class="recipe-card__title">{{ recipe().title }}</h3>
+    <h3 class="recipe-card__title" dir="auto">{{ recipe().title }}</h3>
 
     <div class="recipe-card__rating">
       <app-star-rating [value]="recipe().avgRating" [readonly]="true" />
