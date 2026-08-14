@@ -10,6 +10,7 @@ import { firstValueFrom } from 'rxjs';
 import { CloudinaryService } from '../../../core/data/cloudinary.service';
 import { LabelService } from '../../../core/data/label.service';
 import { RecipeService } from '../../../core/data/recipe.service';
+import { CanComponentDeactivate } from '../../../core/guards/unsaved-changes.guard';
 import { Label } from '../../../core/models/label.model';
 import { NewRecipeInput } from '../../../core/models/recipe.model';
 import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload';
@@ -31,7 +32,7 @@ import { LabelAutocompleteComponent } from '../../../shared/components/label-aut
   styleUrl: './recipe-form-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RecipeFormPageComponent {
+export class RecipeFormPageComponent implements CanComponentDeactivate {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -89,12 +90,18 @@ export class RecipeFormPageComponent {
   onImageSelected(file: File): void {
     this.pendingImageFile.set(file);
     this.imageRemoved = false;
+    this.form.markAsDirty();
   }
 
   onImageCleared(): void {
     this.pendingImageFile.set(null);
     this.existingImageUrl.set(null);
     this.imageRemoved = true;
+    this.form.markAsDirty();
+  }
+
+  hasUnsavedChanges(): boolean {
+    return this.form.dirty && !this.saving();
   }
 
   async onCreateLabel(name: string): Promise<void> {
@@ -150,9 +157,11 @@ export class RecipeFormPageComponent {
         await this.recipeService.update(this.editingId, input);
         const removedLabelIds = this.originalLabelIds.filter((id) => !input.labelIds.includes(id));
         await Promise.all(removedLabelIds.map((id) => this.labelService.deleteIfUnused(id)));
+        this.form.markAsPristine();
         void this.router.navigate(['/recipes', this.editingId]);
       } else {
         await this.recipeService.create(id, input);
+        this.form.markAsPristine();
         void this.router.navigate(['/recipes', id]);
       }
     } finally {
