@@ -3,6 +3,16 @@
     <div class="recipe-detail__header">
       <h1>{{ recipe.title }}</h1>
       <div class="recipe-detail__owner-actions">
+        <a
+          mat-icon-button
+          class="recipe-detail__share"
+          [href]="whatsappShareUrl()"
+          target="_blank"
+          rel="noopener"
+          aria-label="Share on WhatsApp"
+        >
+          <mat-icon svgIcon="whatsapp"></mat-icon>
+        </a>
         <button
           mat-icon-button
           class="recipe-detail__favorite"

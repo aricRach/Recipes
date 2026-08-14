@@ -58,6 +58,12 @@ export class RecipeDetailPageComponent {
     { initialValue: undefined },
   );
 
+  readonly whatsappShareUrl = computed(() => {
+    const recipe = this.recipe();
+    const text = recipe ? `${recipe.title} ${window.location.href}` : window.location.href;
+    return `https://wa.me/?text=${encodeURIComponent(text)}`;
+  });
+
   readonly comments = toSignal(
     toObservable(this.recipeId).pipe(switchMap((id) => (id ? this.commentService.list(id) : of([])))),
     { initialValue: [] },
