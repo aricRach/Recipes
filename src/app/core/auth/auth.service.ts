@@ -4,7 +4,9 @@ import {
   Auth,
   GoogleAuthProvider,
   authState,
+  getRedirectResult,
   signInWithPopup,
+  signInWithRedirect,
   signOut as firebaseSignOut,
   User,
 } from '@angular/fire/auth';
@@ -26,9 +28,35 @@ export class AuthService {
     return !!email && environment.adminEmails.some((e) => e.toLowerCase() === email);
   });
 
+  constructor() {
+    void this.completeRedirectSignIn();
+  }
+
   async signInWithGoogle(): Promise<void> {
-    const credential = await signInWithPopup(this.auth, new GoogleAuthProvider());
-    await this.upsertUserDoc(credential.user);
+    try {
+      const credential = await signInWithPopup(this.auth, new GoogleAuthProvider());
+      await this.upsertUserDoc(credential.user);
+    } catch (error) {
+      if (!this.shouldFallBackToRedirect(error)) {
+        throw error;
+      }
+      // Popup sign-in relies on the Firebase auth iframe reading/writing session storage;
+      // browsers that partition or block that storage (in-app webviews, Safari ITP, Brave)
+      // throw auth/missing-initial-state. Redirect avoids the cross-origin handshake.
+      await signInWithRedirect(this.auth, new GoogleAuthProvider());
+    }
+  }
+
+  private shouldFallBackToRedirect(error: unknown): boolean {
+    const code = (error as { code?: string } | undefined)?.code;
+    return code === 'auth/missing-initial-state' || code === 'auth/web-storage-unsupported';
+  }
+
+  private async completeRedirectSignIn(): Promise<void> {
+    const credential = await getRedirectResult(this.auth);
+    if (credential) {
+      await this.upsertUserDoc(credential.user);
+    }
   }
 
   async signOut(): Promise<void> {
