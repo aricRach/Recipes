@@ -5,13 +5,11 @@
     <h1 class="recipes-list-page__title">My favorites</h1>
   }
 
-  <div class="recipes-list-page__toolbar">
-    <app-search-bar (valueChange)="onSearch($event)" />
-    <button mat-flat-button color="primary" (click)="createRecipe()">
-      <mat-icon>add</mat-icon>
-      New recipe
-    </button>
-  </div>
+  <section class="recipes-list-page__toolbar">
+
+  <div>
+    <app-search-bar class="recipes-list-page__search" (valueChange)="onSearch($event)" />
+
 
   @if (labels().length) {
     <div class="recipes-list-page__label-filter">
@@ -38,7 +36,14 @@
       }
     </div>
   }
+  </div>
 
+  <button mat-flat-button color="primary" class="recipes-list-page__add-button" (click)="createRecipe()">
+    <mat-icon>add</mat-icon>
+    New recipe
+  </button>
+
+  </section>
   @if (filteredRecipes().length) {
     <div class="recipes-list-page__grid">
       @for (recipe of filteredRecipes(); track recipe.id) {
